@@ -87,37 +87,39 @@
     <div class="bgcontainer">
          <!-- here is the video section  -->
            
-            <div id="work" class="container">
-                <video src="finalvid02.mp4"
-                    class="slider" autoplay loop muted>
-                </video>
-        
-                <ul>
-                    <li onclick="videoslider('finalvid02.mp4')">
-                        <video
-                            src="finalvid02.mp4">
-                        </video>
-                    </li>
-                    <li onclick="videoslider('fav.mp4')">
-                        <video
-                            src="fav.mp4">
-                        </video>
-                    </li>
-                    <li onclick="videoslider('favtext.mp4')">
-                        <video
-                            src="favtext.mp4">
-                        </video>
-                    </li>
-                    <li onclick="videoslider('video.mp4')">
-                        <video
-                            src="video.mp4">
-                        </video>
-                    </li>
-                </ul>
-            
+           <section class="video-gallery animate-video-column">
+    <h3>Our Featured Work</h3>
+    <div class="modern-carousel">
+        <div class="carousel-card">
+            <video autoplay muted loop>
+                <source src="fav.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p>Project 1: Stunning Visuals</p>
+        </div>
+        <div class="carousel-card">
+            <video autoplay muted loop>
+                <source src="favtext.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p>Project 2: Creative Text Effects</p>
+        </div>
+        <div class="carousel-card">
+            <video autoplay muted loop>
+                <source src="finalvid02.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p>Project 3: Advanced Editing</p>
+        </div>
+        <div class="carousel-card">
+            <video autoplay muted loop>
+                <source src="video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p>Project 4: Professional Output</p>
+        </div>
     </div>
-
-    
+</section>
         <!-- PRICE SECTION  -->
          
          <div id="price" class="block">
