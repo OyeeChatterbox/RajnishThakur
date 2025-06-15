@@ -171,6 +171,82 @@ if (!localStorage.getItem('desktopAlertShown')) {
             <p>Project 4: Professional Output</p>
         </div>
     </div>
+    <script>
+    // Fullscreen video on click, unmute, autoplay, close on outside click/tap
+    document.addEventListener('DOMContentLoaded', function () {
+        let fullscreenVideo = null;
+        let overlay = null;
+
+        function closeFullscreenVideo() {
+            if (fullscreenVideo) {
+                fullscreenVideo.pause();
+                fullscreenVideo.muted = true;
+                fullscreenVideo.currentTime = 0;
+                fullscreenVideo.parentNode.removeChild(fullscreenVideo);
+                fullscreenVideo = null;
+            }
+            if (overlay) {
+                overlay.parentNode.removeChild(overlay);
+                overlay = null;
+            }
+            document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('.modern-carousel video').forEach(function (vid) {
+            vid.addEventListener('click', function (e) {
+                e.stopPropagation();
+
+                // Create overlay
+                overlay = document.createElement('div');
+                overlay.style.position = 'fixed';
+                overlay.style.top = 0;
+                overlay.style.left = 0;
+                overlay.style.width = '100vw';
+                overlay.style.height = '100vh';
+                overlay.style.background = 'rgba(0,0,0,0.95)';
+                overlay.style.display = 'flex';
+                overlay.style.alignItems = 'center';
+                overlay.style.justifyContent = 'center';
+                overlay.style.zIndex = 99999;
+
+                // Clone video
+                fullscreenVideo = vid.cloneNode(true);
+                fullscreenVideo.style.width = '90vw';
+                fullscreenVideo.style.maxWidth = '900px';
+                fullscreenVideo.style.height = 'auto';
+                fullscreenVideo.style.maxHeight = '90vh';
+                fullscreenVideo.controls = true;
+                fullscreenVideo.muted = false;
+                fullscreenVideo.autoplay = true;
+                fullscreenVideo.loop = true;
+                fullscreenVideo.currentTime = 0;
+                fullscreenVideo.play();
+
+                overlay.appendChild(fullscreenVideo);
+                document.body.appendChild(overlay);
+                document.body.style.overflow = 'hidden';
+
+                // Close on overlay click (not video)
+                overlay.addEventListener('click', function () {
+                    closeFullscreenVideo();
+                });
+
+                // Prevent closing when clicking on video
+                fullscreenVideo.addEventListener('click', function (ev) {
+                    ev.stopPropagation();
+                });
+
+                // ESC key closes
+                document.addEventListener('keydown', function escHandler(ev) {
+                    if (ev.key === 'Escape') {
+                        closeFullscreenVideo();
+                        document.removeEventListener('keydown', escHandler);
+                    }
+                });
+            });
+        });
+    });
+    </script>
 
 
 <!-- thumbnail secton  -->
@@ -182,7 +258,6 @@ if (!localStorage.getItem('desktopAlertShown')) {
     <img src="thumb3.png" alt="Thumbnail 3">
     <img src="thumb4.png" alt="Thumbnail 4">
     <img src="thumb5.png" alt="Thumbnail 5">
-    
     <!-- Add more images as needed -->
 </div>
 <style>
@@ -201,6 +276,7 @@ if (!localStorage.getItem('desktopAlertShown')) {
     box-shadow: 0 2px 12px rgba(0,0,0,0.12);
     transition: transform 0.2s;
     background: #222;
+    cursor: pointer;
 }
 .responsive-gallery img:hover {
     transform: scale(1.05);
@@ -221,6 +297,143 @@ if (!localStorage.getItem('desktopAlertShown')) {
     }
 }
 </style>
+<script>
+// Fullscreen image slider for thumbnails
+document.addEventListener('DOMContentLoaded', function () {
+    const images = Array.from(document.querySelectorAll('.responsive-gallery img'));
+    let currentIndex = 0;
+    let overlay = null;
+    let fullscreenImg = null;
+
+    function showSlider(index) {
+        currentIndex = index;
+        overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.top = 0;
+        overlay.style.left = 0;
+        overlay.style.width = '100vw';
+        overlay.style.height = '100vh';
+        overlay.style.background = 'rgba(0,0,0,0.95)';
+        overlay.style.display = 'flex';
+        overlay.style.alignItems = 'center';
+        overlay.style.justifyContent = 'center';
+        overlay.style.zIndex = 99999;
+
+        fullscreenImg = document.createElement('img');
+        fullscreenImg.src = images[currentIndex].src;
+        fullscreenImg.alt = images[currentIndex].alt;
+        fullscreenImg.style.maxWidth = '95vw';
+        fullscreenImg.style.maxHeight = '95vh';
+        fullscreenImg.style.borderRadius = '16px';
+        fullscreenImg.style.boxShadow = '0 2px 24px rgba(0,0,0,0.3)';
+        fullscreenImg.style.background = '#222';
+
+        // Prev/Next buttons
+        const prevBtn = document.createElement('button');
+        prevBtn.innerHTML = '&#8592;';
+        prevBtn.style.position = 'absolute';
+        prevBtn.style.left = '24px';
+        prevBtn.style.top = '50%';
+        prevBtn.style.transform = 'translateY(-50%)';
+        prevBtn.style.fontSize = '2.5rem';
+        prevBtn.style.background = 'rgba(0,0,0,0.3)';
+        prevBtn.style.color = '#fff';
+        prevBtn.style.border = 'none';
+        prevBtn.style.borderRadius = '50%';
+        prevBtn.style.width = '48px';
+        prevBtn.style.height = '48px';
+        prevBtn.style.cursor = 'pointer';
+
+        const nextBtn = document.createElement('button');
+        nextBtn.innerHTML = '&#8594;';
+        nextBtn.style.position = 'absolute';
+        nextBtn.style.right = '24px';
+        nextBtn.style.top = '50%';
+        nextBtn.style.transform = 'translateY(-50%)';
+        nextBtn.style.fontSize = '2.5rem';
+        nextBtn.style.background = 'rgba(0,0,0,0.3)';
+        nextBtn.style.color = '#fff';
+        nextBtn.style.border = 'none';
+        nextBtn.style.borderRadius = '50%';
+        nextBtn.style.width = '48px';
+        nextBtn.style.height = '48px';
+        nextBtn.style.cursor = 'pointer';
+
+        overlay.appendChild(fullscreenImg);
+        if (images.length > 1) {
+            overlay.appendChild(prevBtn);
+            overlay.appendChild(nextBtn);
+        }
+        document.body.appendChild(overlay);
+        document.body.style.overflow = 'hidden';
+
+        // Navigation
+        prevBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            fullscreenImg.src = images[currentIndex].src;
+            fullscreenImg.alt = images[currentIndex].alt;
+        });
+        nextBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            currentIndex = (currentIndex + 1) % images.length;
+            fullscreenImg.src = images[currentIndex].src;
+            fullscreenImg.alt = images[currentIndex].alt;
+        });
+
+        // Touch swipe support
+        let startX = null;
+        fullscreenImg.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 1) startX = e.touches[0].clientX;
+        });
+        fullscreenImg.addEventListener('touchend', function(e) {
+            if (startX !== null && e.changedTouches.length === 1) {
+                let dx = e.changedTouches[0].clientX - startX;
+                if (dx > 50) prevBtn.click();
+                else if (dx < -50) nextBtn.click();
+            }
+            startX = null;
+        });
+
+        // Keyboard navigation
+        function keyHandler(ev) {
+            if (ev.key === 'Escape') closeSlider();
+            if (ev.key === 'ArrowLeft') prevBtn.click();
+            if (ev.key === 'ArrowRight') nextBtn.click();
+        }
+        document.addEventListener('keydown', keyHandler);
+
+        // Close on overlay click (not image or buttons)
+        overlay.addEventListener('click', function () {
+            closeSlider();
+        });
+        fullscreenImg.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+        prevBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+        nextBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+
+        function closeSlider() {
+            if (overlay) {
+                overlay.parentNode.removeChild(overlay);
+                overlay = null;
+            }
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', keyHandler);
+        }
+    }
+
+    images.forEach((img, idx) => {
+        img.addEventListener('click', function () {
+            showSlider(idx);
+        });
+    });
+});
+</script>
 
 <!-- Elfsight Instagram Feed | Untitled Instagram Feed -->
 <script src="https://static.elfsight.com/platform/platform.js" async></script>
