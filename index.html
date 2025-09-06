@@ -137,9 +137,12 @@ if (!localStorage.getItem('desktopAlertShown')) {
          </div>
     </div>
     <div id="whatido"  class="bgcontainer">
+
+
+
+        
          <!-- here is the video section  -->
-           
-           <section class="video-gallery animate-video-column">
+             <section class="video-gallery animate-video-column">
     <h3>Our Featured Work</h3>
     <div class="modern-carousel">
         <div class="carousel-card">
@@ -248,6 +251,196 @@ if (!localStorage.getItem('desktopAlertShown')) {
     });
     </script>
 
+    <!-- Instagram Reels Video Section -->
+    <center><h2>Instagram Reels</h2></center>
+    <div class="reels-gallery">
+        <video src="reel1.mp4" poster="reel1-thumb.jpg" muted loop playsinline autoplay></video>
+         <video src="reel3.mp4" poster="reel3-thumb.jpg" muted loop playsinline autoplay></video>
+        <video src="reel2.mp4" poster="reel2-thumb.jpg" muted loop playsinline autoplay></video>
+        <video src="reel04.mp4" poster="reel04-thumb.jpg" muted loop playsinline autoplay></video>
+        <!-- Add more reels as needed -->
+    </div>
+    <style>
+    .reels-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        justify-content: center;
+        margin: 24px 0 32px 0;
+    }
+    .reels-gallery video {
+        width: 220px;
+        height: 390px;
+        object-fit: cover;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+        cursor: pointer;
+        background: #222;
+        transition: transform 0.2s;
+    }
+    .reels-gallery video:hover {
+        transform: scale(1.04);
+    }
+    @media (max-width: 900px) {
+        .reels-gallery video {
+            width: 40vw;
+            height: 70vw;
+            max-height: 400px;
+        }
+    }
+    @media (max-width: 600px) {
+        .reels-gallery {
+            gap: 8px;
+        }
+        .reels-gallery video {
+            width: 95vw;
+            height: 170vw;
+            max-height: 350px;
+        }
+    }
+    </style>
+    <script>
+    // Fullscreen Reels Slider
+    document.addEventListener('DOMContentLoaded', function () {
+        const reels = Array.from(document.querySelectorAll('.reels-gallery video'));
+        let currentIndex = 0;
+        let overlay = null;
+        let fullscreenVideo = null;
+
+        function showReelSlider(index) {
+            currentIndex = index;
+            overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = 0;
+            overlay.style.left = 0;
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.background = 'rgba(0,0,0,0.97)';
+            overlay.style.display = 'flex';
+            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent = 'center';
+            overlay.style.zIndex = 99999;
+
+            fullscreenVideo = document.createElement('video');
+            fullscreenVideo.src = reels[currentIndex].src;
+            fullscreenVideo.poster = reels[currentIndex].poster;
+            fullscreenVideo.controls = true;
+            fullscreenVideo.autoplay = true;
+            fullscreenVideo.loop = true;
+            fullscreenVideo.muted = false;
+            fullscreenVideo.style.maxWidth = '95vw';
+            fullscreenVideo.style.maxHeight = '95vh';
+            fullscreenVideo.style.borderRadius = '18px';
+            fullscreenVideo.style.background = '#222';
+            fullscreenVideo.style.boxShadow = '0 2px 24px rgba(0,0,0,0.3)';
+
+            // Prev/Next buttons
+            const prevBtn = document.createElement('button');
+            prevBtn.innerHTML = '&#8592;';
+            prevBtn.style.position = 'absolute';
+            prevBtn.style.left = '24px';
+            prevBtn.style.top = '50%';
+            prevBtn.style.transform = 'translateY(-50%)';
+            prevBtn.style.fontSize = '2.5rem';
+            prevBtn.style.background = 'rgba(0,0,0,0.3)';
+            prevBtn.style.color = '#fff';
+            prevBtn.style.border = 'none';
+            prevBtn.style.borderRadius = '50%';
+            prevBtn.style.width = '48px';
+            prevBtn.style.height = '48px';
+            prevBtn.style.cursor = 'pointer';
+
+            const nextBtn = document.createElement('button');
+            nextBtn.innerHTML = '&#8594;';
+            nextBtn.style.position = 'absolute';
+            nextBtn.style.right = '24px';
+            nextBtn.style.top = '50%';
+            nextBtn.style.transform = 'translateY(-50%)';
+            nextBtn.style.fontSize = '2.5rem';
+            nextBtn.style.background = 'rgba(0,0,0,0.3)';
+            nextBtn.style.color = '#fff';
+            nextBtn.style.border = 'none';
+            nextBtn.style.borderRadius = '50%';
+            nextBtn.style.width = '48px';
+            nextBtn.style.height = '48px';
+            nextBtn.style.cursor = 'pointer';
+
+            overlay.appendChild(fullscreenVideo);
+            if (reels.length > 1) {
+                overlay.appendChild(prevBtn);
+                overlay.appendChild(nextBtn);
+            }
+            document.body.appendChild(overlay);
+            document.body.style.overflow = 'hidden';
+
+            prevBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                currentIndex = (currentIndex - 1 + reels.length) % reels.length;
+                fullscreenVideo.src = reels[currentIndex].src;
+                fullscreenVideo.poster = reels[currentIndex].poster;
+                fullscreenVideo.play();
+            });
+            nextBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                currentIndex = (currentIndex + 1) % reels.length;
+                fullscreenVideo.src = reels[currentIndex].src;
+                fullscreenVideo.poster = reels[currentIndex].poster;
+                fullscreenVideo.play();
+            });
+
+            // Touch swipe support
+            let startX = null;
+            fullscreenVideo.addEventListener('touchstart', function(e) {
+                if (e.touches.length === 1) startX = e.touches[0].clientX;
+            });
+            fullscreenVideo.addEventListener('touchend', function(e) {
+                if (startX !== null && e.changedTouches.length === 1) {
+                    let dx = e.changedTouches[0].clientX - startX;
+                    if (dx > 50) prevBtn.click();
+                    else if (dx < -50) nextBtn.click();
+                }
+                startX = null;
+            });
+
+            // Keyboard navigation
+            function keyHandler(ev) {
+                if (ev.key === 'Escape') closeReelSlider();
+                if (ev.key === 'ArrowLeft') prevBtn.click();
+                if (ev.key === 'ArrowRight') nextBtn.click();
+            }
+            document.addEventListener('keydown', keyHandler);
+
+            // Close on overlay click (not video or buttons)
+            overlay.addEventListener('click', function () {
+                closeReelSlider();
+            });
+            fullscreenVideo.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+            prevBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+            nextBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+
+            function closeReelSlider() {
+                if (overlay) {
+                    overlay.parentNode.removeChild(overlay);
+                    overlay = null;
+                }
+                document.body.style.overflow = '';
+                document.removeEventListener('keydown', keyHandler);
+            }
+        }
+
+        reels.forEach((vid, idx) => {
+            vid.addEventListener('click', function () {
+                showReelSlider(idx);
+            });
+        });
+    });
+    </script>
 
 <!-- thumbnail secton  -->
 
@@ -438,8 +631,8 @@ document.addEventListener('DOMContentLoaded', function () {
 <!-- Elfsight Instagram Feed | Untitled Instagram Feed -->
 <script src="https://static.elfsight.com/platform/platform.js" async></script>
 <div class="elfsight-app-90e7bb49-0b8e-4425-be7f-5c78185131d1" data-elfsight-app-lazy></div>
-        <!-- PRICE SECTION 
-         
+        <!-- PRICE SECTION -->
+
          <div id="price">
             <section>    
                 <center>
@@ -452,19 +645,19 @@ document.addEventListener('DOMContentLoaded', function () {
                                     <path class="deco-layer deco-layer--3" d="M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716H42.401L43.415,98.342z" fill="#FFFFFF" opacity="0.7"></path>
                                     <path class="deco-layer deco-layer--4" d="M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z" fill="#FFFFFF"></path>
                                 </svg>
-                                <div class="pricing-price"><span class="pricing-currency">$</span>11.70
-                                    <span class="pricing-period">/ video</span>
+                                <div class="pricing-price"><span class="pricing-currency">₹</span>2,590
+                                    <span class="pricing-period">/10 video's</span>
                                 </div>
-                                <h3 class="pricing-title">Freelance</h3>
+                                <h3 class="pricing-title">REELS AND SHORTS</h3>
                             </div>
                             <ul class="pricing-feature-list">
                                 <li class="pricing-feature">`</li>
-                                    <li class="pricing-feature"><strong>QUANTITY</strong>- 2 SHORTS / REELS </li>
+                                <li class="pricing-feature"><strong>QUANTITY</strong>- 10 REELS </li>
                                 <li class="pricing-feature"><strong>CATEGORIES - </strong> VLOG'S |FOOD VLOG'S | INFORMATIVE | DOCUMENTRY | PORDCAST </li>
-                                <li class="pricing-feature"> <strong>MAX CLIP LENGTH </strong> - 5 MIN TO 10 MIN </li>
+                                <li class="pricing-feature"> <strong>MAX CLIP LENGTH </strong> -  10 MIN </li>
                                 <li class="pricing-feature"> <strong>EFFECT'S - </strong> INCLUDED ALL</li>
                             </ul>
-                            <button class="pricing-action">Choose plan</button>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdsW228saDMCqddk3ecjHMw7uIdp_YuFsi1SKJlnjV-HHCKsg/viewform?embedded=true"><button class="pricing-action">  Choose plan  </button></a>
                         </div>
                         <div class="pricing-item features-item ja-animate pricing__item--featured" data-animation="move-from-bottom" data-delay="item-1" style="min-height: 497px;">
                             <div class="pricing-deco" style="background: linear-gradient(135deg,#a93bfe,#584efd)">
@@ -474,17 +667,20 @@ document.addEventListener('DOMContentLoaded', function () {
                                     <path class="deco-layer deco-layer--3" d="M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716H42.401L43.415,98.342z" fill="#FFFFFF" opacity="0.7"></path>
                                     <path class="deco-layer deco-layer--4" d="M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z" fill="#FFFFFF"></path>
                                 </svg>
-                                <div class="pricing-price"><span class="pricing-currency">$</span>59
-                                    <span class="pricing-period">/ mo</span>
+                                <div class="pricing-price"><span class="pricing-currency">₹</span>1,500
+                                    <span class="pricing-period">/ video</span>
                                 </div>
-                                <h3 class="pricing-title">Business</h3>
+                                <h3 class="pricing-title">YOUTUBE VIDEO</h3>
                             </div>
                             <ul class="pricing-feature-list">
-                                <li class="pricing-feature">5 GB of space</li>
-                                <li class="pricing-feature">Support at $5/hour</li>
-                                <li class="pricing-feature">Full cloud access</li>
+                                <li class="pricing-feature"><strong>QUANTITY</strong>- Per/video</li>
+                                <li class="pricing-feature"><strong>CATEGORIES - </strong> VLOG'S |FOOD VLOG'S | INFORMATIVE | DOCUMENTRY | PORDCAST </li>
+                                <li class="pricing-feature"><strong>MAX CLIP LENGTH </strong>60 MINs</li>
+                                <li class="pricing-feature"> <strong>EFFECT'S - </strong> INCLUDED ALL</li>                           
                             </ul>
-                            <button class="pricing-action">Choose plan</button>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdsW228saDMCqddk3ecjHMw7uIdp_YuFsi1SKJlnjV-HHCKsg/viewform?embedded=true"><button class="pricing-action">  Choose plan  </button></a>
+                            
+                            
                         </div>
                         <div class="pricing-item features-item ja-animate" data-animation="move-from-bottom" data-delay="item-2" style="min-height: 497px;">
                             <div class="pricing-deco">
@@ -494,22 +690,22 @@ document.addEventListener('DOMContentLoaded', function () {
                                     <path class="deco-layer deco-layer--3" d="M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716H42.401L43.415,98.342z" fill="#FFFFFF" opacity="0.7"></path>
                                     <path class="deco-layer deco-layer--4" d="M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z" fill="#FFFFFF"></path>
                                 </svg>
-                                <div class="pricing-price"><span class="pricing-currency">$</span>99
+                                <div class="pricing-price"><span class="pricing-currency">$</span>NA
                                     <span class="pricing-period">/ mo</span>
                                 </div>
-                                <h3 class="pricing-title">Enterprise</h3>
+                                <h3 class="pricing-title">NA</h3>
                             </div>
                             <ul class="pricing-feature-list">
-                                <li class="pricing-feature">10 GB of space</li>
-                                <li class="pricing-feature">Support at $5/hour</li>
-                                <li class="pricing-feature">Full cloud access</li>
+                                <li class="pricing-feature">NA</li>
+                                <li class="pricing-feature">NA</li>
+                                <li class="pricing-feature">NA</li>
                             </ul>
-                            <button class="pricing-action">Choose plan</button>
+                            <button class="pricing-action">NA</button>
                         </div>
                     </div>
                 </section>
          </div>
- -->
+
 
      <footer id="footer">
         <div class="upper-footer">
